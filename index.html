@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploring Ecosystem Types - Grade 9 Science</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ecoGreen: '#16a34a',
+                        ecoSun: '#f59e0b',
+                        ecoOcean: '#0284c7',
+                        ecoDark: '#062016'
+                    },
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                        display: ['Fredoka', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Strict 16:9 Aspect Ratio Container for Display */
+        .aspect-16-9-container {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16 / 9;
+            margin: 0 auto;
+        }
+
+        @media (max-aspect-ratio: 16/9) {
+            .aspect-16-9-container {
+                height: 98vh;
+                max-height: 675px;
+                width: auto;
+            }
+        }
+
+        /* Glassmorphism visual elements */
+        .glass-box {
+            background: rgba(6, 32, 22, 0.92);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(74, 222, 128, 0.25);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Hotspot animation */
+        @keyframes pulse-hotspot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.8); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+        }
+        .hotspot-node {
+            animation: pulse-hotspot 1.8s infinite;
+        }
+
+        /* Print formatting for completion certificate */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #certificate-modal, #certificate-modal * {
+                visibility: visible;
+            }
+            #certificate-modal {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100vw;
+                height: 100vh;
+                background: white !important;
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex items-center justify-center p-2 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-950 via-slate-950 to-black select-none overflow-x-hidden">
+
+    <!-- MAIN 16:9 DISPLAY FRAME -->
+    <div id="app-container" class="aspect-16-9-container relative flex flex-col justify-between rounded-3xl glass-box shadow-2xl overflow-hidden border border-emerald-500/30">
+
+        <!-- HEADER BAR -->
+        <header class="flex items-center justify-between px-4 py-2 bg-black/60 border-b border-emerald-500/30 z-20">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold shadow-lg shadow-amber-400/20 text-lg">
+                    <i class="fa-solid fa-tree"></i>
+                </div>
+                <div>
+                    <h1 class="text-base md:text-lg font-black font-display bg-gradient-to-r from-amber-300 via-emerald-300 to-teal-200 bg-clip-text text-transparent">
+                        Exploring Ecosystem Types
+                    </h1>
+                    <p class="text-[11px] text-emerald-400/90 font-semibold hidden sm:block">
+                        Natural vs. Human-Made Ecosystems • Grade 9 Science
+                    </p>
+                </div>
+            </div>
+
+            <!-- LEVEL NAV TABS -->
+            <nav class="flex items-center space-x-1 sm:space-x-2 bg-slate-900/90 p-1 rounded-2xl border border-white/10">
+                <button id="nav-1" onclick="switchLevel(1)" class="px-3 py-1 rounded-xl text-xs font-extrabold transition-all flex items-center space-x-1.5 bg-emerald-500 text-slate-950 shadow">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span class="hidden md:inline">Level 1: Components</span>
+                    <span class="md:hidden">L1</span>
+                </button>
+                <button id="nav-2" onclick="switchLevel(2)" class="px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 text-slate-300 hover:text-amber-300">
+                    <i class="fa-solid fa-brain"></i>
+                    <span class="hidden md:inline">Level 2: Analysis</span>
+                    <span class="md:hidden">L2</span>
+                </button>
+                <button id="nav-3" onclick="switchLevel(3)" class="px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 text-slate-300 hover:text-amber-300">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <span class="hidden md:inline">Level 3: Compare</span>
+                    <span class="md:hidden">L3</span>
+                </button>
+            </nav>
+
+            <!-- CONTROLS & SCORE DISPLAY -->
+            <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-1.5 bg-amber-500/20 border border-amber-400/40 px-3 py-1 rounded-full">
+                    <i class="fa-solid fa-star text-amber-400 text-xs animate-bounce"></i>
+                    <span class="text-[10px] text-amber-200 font-bold uppercase tracking-wider">Score:</span>
+                    <span id="score-val" class="font-black font-display text-amber-300 text-sm">0</span>
+                </div>
+
+                <button id="audio-btn" onclick="toggleAudio()" title="Toggle Sound & Music" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 flex items-center justify-center border border-amber-400/30 transition-all text-xs">
+                    <i id="audio-icon" class="fa-solid fa-volume-xmark text-slate-400"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN INTERACTIVE CANVAS AREA -->
+        <main class="relative flex-1 overflow-hidden p-3 flex flex-col justify-between bg-gradient-to-b from-slate-950/80 to-emerald-950/40">
+
+            <!-- LEVEL 1: VISUAL DIAGRAM EXPLORER & COMPONENT MATRIX -->
+            <div id="level-1" class="h-full flex flex-col justify-between space-y-2">
+                <!-- Ecosystem Navigation Bar -->
+                <div class="flex items-center justify-between gap-1.5 overflow-x-auto pb-1">
+                    <button onclick="selectEcosystem('rainforest')" id="tab-rainforest" class="eco-tab px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all flex items-center space-x-1.5 bg-emerald-500 text-slate-950 shadow">
+                        <i class="fa-solid fa-tree"></i><span>Tropical Rainforest</span>
+                    </button>
+                    <button onclick="selectEcosystem('botanical')" id="tab-botanical" class="eco-tab px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 bg-slate-800 text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-seedling"></i><span>Botanical Garden</span>
+                    </button>
+                    <button onclick="selectEcosystem('coral')" id="tab-coral" class="eco-tab px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 bg-slate-800 text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-water"></i><span>Coral Reef</span>
+                    </button>
+                    <button onclick="selectEcosystem('estuary')" id="tab-estuary" class="eco-tab px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 bg-slate-800 text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-angles-down"></i><span>Estuary</span>
+                    </button>
+                    <button onclick="selectEcosystem('mangrove')" id="tab-mangrove" class="eco-tab px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 bg-slate-800 text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-bridge-water"></i><span>Mangrove Forest</span>
+                    </button>
+                </div>
+
+                <!-- Split Workspace: Visual Diagram Hotspots + Interactive Form -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3 flex-1 items-stretch overflow-hidden">
+                    
+                    <!-- Diagram Visual Preview with Hotspots -->
+                    <div id="ecosystem-stage" class="md:col-span-5 relative rounded-2xl overflow-hidden border border-emerald-500/30 flex flex-col justify-between p-3 bg-slate-900/90 shadow-inner group min-h-[260px]">
+                        <!-- Dynamic Visual Canvas Artwork (SVG/Graphics) -->
+                        <div id="stage-bg" class="absolute inset-0 flex items-center justify-center p-2 opacity-90 transition-all duration-500">
+                            <!-- Populated dynamically via JS with custom SVG illustrations -->
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent pointer-events-none"></div>
+
+                        <!-- Badge Overlay -->
+                        <div class="relative z-10 flex justify-between items-start">
+                            <div class="flex flex-col">
+                                <span id="type-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 w-fit">
+                                    Natural Ecosystem
+                                </span>
+                                <span id="location-tag" class="text-[10px] text-amber-300 font-bold mt-1 drop-shadow-md">
+                                    <i class="fa-solid fa-location-dot mr-1"></i>Mayon Volcano National Park, PH
+                                </span>
+                            </div>
+                            <span class="text-[10px] text-slate-300 bg-slate-900/90 px-2 py-0.5 rounded-md border border-white/10 font-semibold shadow">
+                                Tap hotspots to inspect
+                            </span>
+                        </div>
+
+                        <!-- Interactive Diagram Hotspots -->
+                        <div id="hotspots-container" class="relative z-10 my-auto h-36 w-full">
+                            <!-- Populated dynamically via JavaScript -->
+                        </div>
+
+                        <!-- Hotspot Info Display Footer -->
+                        <div class="relative z-10 bg-slate-900/95 border border-amber-400/40 p-2 rounded-xl text-xs shadow-xl backdrop-blur-md">
+                            <div id="hotspot-info-title" class="font-extrabold text-amber-300 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-circle-info text-amber-400"></i><span>Interactive Philippine Ecosystem Explorer</span>
+                            </div>
+                            <p id="hotspot-info-desc" class="text-[11px] text-slate-200 mt-0.5 leading-tight">
+                                Click on any glowing hotspot (B1, B2 for Biotic; A1, A2 for Abiotic) above to explore features.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Data Form Matrix -->
+                    <div class="md:col-span-7 bg-slate-900/80 border border-white/10 rounded-2xl p-3 flex flex-col justify-between">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+                            <h3 class="text-xs font-bold text-emerald-300 uppercase tracking-wider flex items-center space-x-1.5">
+                                <i class="fa-solid fa-table"></i><span id="current-eco-title">Tropical Rainforest Matrix</span>
+                            </h3>
+                            <span class="text-[10px] text-amber-300/80 font-medium">Identify 2 Biotic, 2 Abiotic & Life Support</span>
+                        </div>
+
+                        <!-- Form Dropdown Selectors -->
+                        <div class="grid grid-cols-2 gap-2 my-2 text-xs">
+                            <!-- Biotic 1 -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-emerald-400 mb-1">
+                                    <i class="fa-solid fa-bug text-emerald-300"></i> Biotic Feature 1 (Living)
+                                </label>
+                                <select id="sel-bio1" class="w-full bg-slate-950 border border-emerald-500/40 rounded-lg p-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+                                    <option value="">-- Select Biotic --</option>
+                                </select>
+                            </div>
+
+                            <!-- Biotic 2 -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-emerald-400 mb-1">
+                                    <i class="fa-solid fa-leaf text-emerald-300"></i> Biotic Feature 2 (Living)
+                                </label>
+                                <select id="sel-bio2" class="w-full bg-slate-950 border border-emerald-500/40 rounded-lg p-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+                                    <option value="">-- Select Biotic --</option>
+                                </select>
+                            </div>
+
+                            <!-- Abiotic 1 -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-cyan-400 mb-1">
+                                    <i class="fa-solid fa-sun text-cyan-300"></i> Abiotic Feature 1 (Non-living)
+                                </label>
+                                <select id="sel-abi1" class="w-full bg-slate-950 border border-cyan-500/40 rounded-lg p-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+                                    <option value="">-- Select Abiotic --</option>
+                                </select>
+                            </div>
+
+                            <!-- Abiotic 2 -->
+                            <div>
+                                <label class="block text-[10px] font-bold text-cyan-400 mb-1">
+                                    <i class="fa-solid fa-cloud-rain text-cyan-300"></i> Abiotic Feature 2 (Non-living)
+                                </label>
+                                <select id="sel-abi2" class="w-full bg-slate-950 border border-cyan-500/40 rounded-lg p-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+                                    <option value="">-- Select Abiotic --</option>
+                                </select>
+                            </div>
+
+                            <!-- Life Support Function -->
+                            <div class="col-span-2">
+                                <label class="block text-[10px] font-bold text-amber-300 mb-1">
+                                    <i class="fa-solid fa-heart-pulse"></i> How this ecosystem supports life:
+                                </label>
+                                <select id="sel-support" class="w-full bg-slate-950 border border-amber-500/40 rounded-lg p-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+                                    <option value="">-- Select Life Support Function --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Feedback Message & Submission -->
+                        <div class="flex items-center justify-between pt-1">
+                            <div id="l1-feedback" class="text-xs font-bold text-slate-300 min-h-[20px] flex items-center space-x-1.5">
+                                <i class="fa-solid fa-circle-question text-slate-500"></i>
+                                <span>Fill in all choices then submit.</span>
+                            </div>
+
+                            <button onclick="checkLevel1()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black text-xs hover:from-emerald-400 hover:to-teal-400 transition-all shadow-lg flex items-center space-x-1">
+                                <i class="fa-solid fa-check-circle"></i><span>Submit Answer</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEVEL 2: ANALYSIS QUESTIONS -->
+            <div id="level-2" class="hidden h-full flex-col justify-between space-y-3">
+                <div class="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-3 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-sm font-extrabold text-amber-300 flex items-center space-x-2">
+                            <i class="fa-solid fa-brain"></i><span>Level 2: Critical Thinking & Analysis</span>
+                        </h2>
+                        <p class="text-[11px] text-slate-300">Answer questions based on your ecosystem observations.</p>
+                    </div>
+                    <div class="flex items-center space-x-1 text-xs font-bold text-emerald-400">
+                        <span>Question</span> <span id="q-num" class="text-amber-300 text-sm">1</span> <span>of 3</span>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="flex-1 bg-slate-900/90 border border-white/10 rounded-2xl p-4 flex flex-col justify-between">
+                    <h3 id="l2-question-text" class="text-xs md:text-sm font-extrabold text-slate-100 leading-snug">
+                        Loading question...
+                    </h3>
+
+                    <!-- Choice Options -->
+                    <div id="l2-options-container" class="grid grid-cols-1 gap-2 my-2">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <!-- Feedback Output -->
+                    <div id="l2-feedback" class="min-h-[36px] bg-slate-950/80 border border-white/10 rounded-xl p-2 text-xs flex items-center justify-between">
+                        <span id="l2-feedback-text" class="text-slate-400 font-medium">Select an option to evaluate your answer.</span>
+                        <button id="l2-next-btn" onclick="nextL2Question()" class="hidden px-3 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-xs hover:bg-amber-300 transition-all">
+                            Next Question <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEVEL 3: SENTENCE COMPLETION (NATURAL VS HUMAN-MADE) -->
+            <div id="level-3" class="hidden h-full flex-col justify-between space-y-2">
+                <div class="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-2.5 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-sm font-extrabold text-amber-300 flex items-center space-x-2">
+                            <i class="fa-solid fa-scale-balanced"></i><span>Level 3: Compare Ecosystems</span>
+                        </h2>
+                        <p class="text-[11px] text-slate-300">Complete statements comparing natural and human-made ecosystems.</p>
+                    </div>
+                </div>
+
+                <div class="flex-1 bg-slate-900/90 border border-white/10 rounded-2xl p-3 overflow-y-auto space-y-2 text-xs">
+                    <!-- Statement 1 -->
+                    <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+                        <p class="font-bold text-emerald-300">1. A natural ecosystem is:</p>
+                        <select id="l3-s1" class="w-full bg-slate-900 border border-emerald-500/40 rounded-lg p-1.5 text-xs text-slate-200">
+                            <option value="">-- Choose definition --</option>
+                            <option value="correct">An ecosystem formed naturally by nature without human intervention.</option>
+                            <option value="wrong1">An ecosystem designed entirely inside glass greenhouses.</option>
+                            <option value="wrong2">An area where only animals live without non-living factors.</option>
+                        </select>
+                    </div>
+
+                    <!-- Statement 2 -->
+                    <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+                        <p class="font-bold text-emerald-300">2. A human-made ecosystem is:</p>
+                        <select id="l3-s2" class="w-full bg-slate-900 border border-emerald-500/40 rounded-lg p-1.5 text-xs text-slate-200">
+                            <option value="">-- Choose definition --</option>
+                            <option value="wrong1">An ecosystem created by volcanic eruptions and sea tides.</option>
+                            <option value="correct">An ecosystem artificially created and maintained by human beings.</option>
+                            <option value="wrong2">A wild forest untouched by people for centuries.</option>
+                        </select>
+                    </div>
+
+                    <!-- Statement 3 -->
+                    <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+                        <p class="font-bold text-emerald-300">3. One similarity between natural and human-made ecosystems is:</p>
+                        <select id="l3-s3" class="w-full bg-slate-900 border border-emerald-500/40 rounded-lg p-1.5 text-xs text-slate-200">
+                            <option value="">-- Choose similarity --</option>
+                            <option value="wrong1">Both require artificial lighting and manual feeding every day.</option>
+                            <option value="wrong2">Both are completely immune to climate change.</option>
+                            <option value="correct">Both consist of interacting biotic (living) and abiotic (non-living) features.</option>
+                        </select>
+                    </div>
+
+                    <!-- Statement 4 -->
+                    <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+                        <p class="font-bold text-emerald-300">4. One difference between natural and human-made ecosystems is:</p>
+                        <select id="l3-s4" class="w-full bg-slate-900 border border-emerald-500/40 rounded-lg p-1.5 text-xs text-slate-200">
+                            <option value="">-- Choose difference --</option>
+                            <option value="correct">Natural ecosystems self-sustain, while human-made ecosystems require human maintenance.</option>
+                            <option value="wrong1">Human-made ecosystems contain no organisms or living plants.</option>
+                            <option value="wrong2">Natural ecosystems do not require sunlight or water.</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Level 3 Controls -->
+                <div class="flex justify-between items-center pt-1">
+                    <div id="l3-feedback" class="text-xs font-bold text-slate-300">
+                        Complete all 4 statements to finalize your analysis.
+                    </div>
+                    <button onclick="checkLevel3()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-xs hover:from-amber-300 hover:to-amber-400 transition-all shadow-lg flex items-center space-x-1">
+                        <i class="fa-solid fa-award"></i><span>Finish & Get Certificate</span>
+                    </button>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- FOOTER BAR -->
+        <footer class="px-4 py-1.5 bg-black/60 border-t border-emerald-500/20 flex justify-between items-center text-[11px] text-slate-400">
+            <span>Grade 9 Science • Ecosystem Competencies</span>
+            <div class="flex items-center space-x-4">
+                <span id="progress-indicator"><i class="fa-solid fa-chart-line text-emerald-400 mr-1"></i>Progress: 0%</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- FINAL CERTIFICATE MODAL -->
+    <div id="certificate-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-amber-400/80 rounded-3xl p-6 max-w-2xl w-full text-center shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="inline-block bg-amber-400/10 border border-amber-400/30 rounded-full px-3 py-1 text-xs font-black text-amber-300 uppercase tracking-widest mb-2">
+                Official Completion Certificate
+            </div>
+
+            <h2 class="text-2xl font-black font-display text-white mb-1">Ecosystem Explorer Award</h2>
+            <p class="text-xs text-slate-300 mb-4">This certifies successful completion of the Grade 9 Science interactive visual module on Ecosystem Types.</p>
+
+            <div class="bg-slate-950 border border-white/10 rounded-2xl p-4 my-3 text-center space-y-2">
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-bold">Total Mastery Score</div>
+                <div id="final-score" class="text-3xl font-black font-display text-amber-400">100 / 100</div>
+                <div id="final-rating" class="text-xs text-emerald-400 font-bold">Rating: Outstanding Explorer ★★★★★</div>
+            </div>
+
+            <div class="flex justify-center space-x-3 mt-4">
+                <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 font-black text-xs hover:bg-emerald-400 transition-all flex items-center space-x-1.5">
+                    <i class="fa-solid fa-print"></i><span>Print Certificate</span>
+                </button>
+                <button onclick="resetGame()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 font-bold text-xs hover:bg-slate-700 transition-all flex items-center space-x-1.5">
+                    <i class="fa-solid fa-rotate-right"></i><span>Try Again</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* Global State */
+        let currentLevel = 1;
+        let score = 0;
+        let activeEcoKey = 'rainforest';
+        let level1Progress = { rainforest: false, botanical: false, coral: false, estuary: false, mangrove: false };
+        let level2Index = 0;
+        let audioMuted = true;
+        let audioCtx = null;
+        let bgOscillator = null;
+
+        /* SVG Visual Artwork Templates for Philippine Ecosystems */
+        const ecosystemIllustrations = {
+            rainforest: `
+                <svg class="w-full h-full rounded-xl" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="skyRF" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0284c7"/><stop offset="100%" stop-color="#38bdf8"/></linearGradient>
+                        <linearGradient id="volcanoGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#0f172a"/></linearGradient>
+                        <linearGradient id="treesGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#15803d"/><stop offset="100%" stop-color="#052e16"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="220" fill="url(#skyRF)"/>
+                    <!-- Mayon Volcano Silhouette -->
+                    <polygon points="200,40 80,220 320,220" fill="url(#volcanoGrad)"/>
+                    <path d="M190,40 Q200,20 210,40 L200,55 Z" fill="#e2e8f0" opacity="0.8"/>
+                    <!-- Rainforest Canopy -->
+                    <circle cx="60" cy="170" r="50" fill="url(#treesGrad)"/>
+                    <circle cx="130" cy="160" r="60" fill="url(#treesGrad)"/>
+                    <circle cx="270" cy="160" r="65" fill="url(#treesGrad)"/>
+                    <circle cx="340" cy="170" r="55" fill="url(#treesGrad)"/>
+                    <rect x="0" y="180" width="400" height="40" fill="#052e16"/>
+                    <!-- Sun & Clouds -->
+                    <circle cx="330" cy="50" r="22" fill="#fef08a" opacity="0.9"/>
+                    <path d="M40,60 Q50,45 70,50 Q85,40 100,55 Q110,65 95,75 Q80,80 50,75 Z" fill="#ffffff" opacity="0.8"/>
+                    <!-- Philippine Eagle Silhouette -->
+                    <path d="M160,80 Q170,75 180,82 Q175,90 160,80 Z" fill="#0f172a"/>
+                </svg>`,
+            botanical: `
+                <svg class="w-full h-full rounded-xl" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="skyBG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="220" fill="url(#skyBG)"/>
+                    <!-- Baguio Pine Hills -->
+                    <path d="M0,140 Q100,100 200,130 Q300,90 400,120 L400,220 L0,220 Z" fill="#166534"/>
+                    <!-- Greenhouse Structure -->
+                    <rect x="130" y="100" width="140" height="70" fill="#e2e8f0" rx="8" opacity="0.85" stroke="#0284c7" stroke-width="2"/>
+                    <polygon points="130,100 200,60 270,100" fill="#93c5fd" opacity="0.7" stroke="#0284c7" stroke-width="2"/>
+                    <line x1="165" y1="100" x2="165" y2="170" stroke="#0284c7" stroke-width="1.5"/>
+                    <line x1="200" y1="100" x2="200" y2="170" stroke="#0284c7" stroke-width="1.5"/>
+                    <line x1="235" y1="100" x2="235" y2="170" stroke="#0284c7" stroke-width="1.5"/>
+                    <!-- Manicured Flowerbeds -->
+                    <path d="M0,170 Q200,150 400,170 L400,220 L0,220 Z" fill="#15803d"/>
+                    <circle cx="50" cy="190" r="12" fill="#f43f5e"/><circle cx="80" cy="195" r="10" fill="#a855f7"/>
+                    <circle cx="320" cy="195" r="11" fill="#eab308"/><circle cx="350" cy="190" r="13" fill="#f43f5e"/>
+                    <!-- Fountain -->
+                    <ellipse cx="200" cy="195" rx="35" ry="12" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/>
+                    <path d="M200,195 L200,175 M195,180 Q200,170 205,180" stroke="#ffffff" stroke-width="2" fill="none"/>
+                </svg>`,
+            coral: `
+                <svg class="w-full h-full rounded-xl" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0284c7"/><stop offset="50%" stop-color="#0369a1"/><stop offset="100%" stop-color="#0c4a6e"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="220" fill="url(#seaGrad)"/>
+                    <!-- Sunlight Rays -->
+                    <polygon points="50,0 90,0 160,220 80,220" fill="#ffffff" opacity="0.15"/>
+                    <polygon points="200,0 240,0 310,220 230,220" fill="#ffffff" opacity="0.15"/>
+                    <!-- Tubbataha Corals -->
+                    <path d="M0,220 Q40,160 80,220 T160,220" fill="#f43f5e"/>
+                    <path d="M120,220 Q160,140 200,220" fill="#a855f7"/>
+                    <path d="M220,220 Q260,130 300,220 T380,220" fill="#eab308"/>
+                    <path d="M320,220 Q360,150 400,220" fill="#22c55e"/>
+                    <!-- Sea Turtle & Clownfish -->
+                    <ellipse cx="140" cy="80" rx="22" ry="14" fill="#15803d" transform="rotate(-15 140 80)"/>
+                    <circle cx="160" cy="75" r="6" fill="#166534"/>
+                    <!-- Clownfish -->
+                    <ellipse cx="280" cy="110" rx="14" ry="8" fill="#f97316"/>
+                    <rect x="276" y="103" width="3" height="14" fill="#ffffff"/>
+                </svg>`,
+            estuary: `
+                <svg class="w-full h-full rounded-xl" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="riverGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#0284c7"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="220" fill="#0284c7"/>
+                    <!-- Coastal Delta Landmasses -->
+                    <path d="M0,0 L180,0 Q160,100 0,140 Z" fill="#15803d"/>
+                    <path d="M400,0 L240,0 Q260,110 400,150 Z" fill="#166534"/>
+                    <!-- Mixing River Water (Brackish) -->
+                    <path d="M180,0 L240,0 Q230,110 400,190 L0,190 Q170,100 180,0 Z" fill="url(#riverGrad)"/>
+                    <!-- Mudflat Sediments -->
+                    <ellipse cx="200" cy="180" rx="90" ry="25" fill="#78350f" opacity="0.7"/>
+                    <!-- Migratory Birds -->
+                    <path d="M80,40 Q88,32 96,40 Q104,32 112,40" stroke="#ffffff" stroke-width="2" fill="none"/>
+                    <path d="M280,50 Q288,42 296,50 Q304,42 312,50" stroke="#ffffff" stroke-width="2" fill="none"/>
+                </svg>`,
+            mangrove: `
+                <svg class="w-full h-full rounded-xl" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="mangroveSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#ccfbf1"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="220" fill="url(#mangroveSky)"/>
+                    <!-- Brackish Water Base -->
+                    <rect x="0" y="140" width="400" height="80" fill="#0f766e"/>
+                    <!-- Stilt Roots (Siargao Mangroves) -->
+                    <g stroke="#78350f" stroke-width="4" stroke-linecap="round">
+                        <line x1="60" y1="120" x2="20" y2="180"/><line x1="60" y1="120" x2="60" y2="185"/><line x1="60" y1="120" x2="100" y2="180"/>
+                        <line x1="200" y1="110" x2="150" y2="175"/><line x1="200" y1="110" x2="200" y2="180"/><line x1="200" y1="110" x2="250" y2="175"/>
+                        <line x1="340" y1="120" x2="300" y2="180"/><line x1="340" y1="120" x2="340" y2="185"/><line x1="340" y1="120" x2="380" y2="180"/>
+                    </g>
+                    <!-- Foliage Upper Canopy -->
+                    <circle cx="60" cy="90" r="45" fill="#15803d"/>
+                    <circle cx="200" cy="80" r="55" fill="#166534"/>
+                    <circle cx="340" cy="90" r="45" fill="#15803d"/>
+                    <!-- Mudskipper on roots -->
+                    <ellipse cx="100" cy="175" rx="10" ry="5" fill="#451a03"/>
+                    <circle cx="105" cy="173" r="2" fill="#fef08a"/>
+                </svg>`
+        };
+
+        /* Ecosystem Dataset with PH Locations */
+        const ecosystemData = {
+            rainforest: {
+                title: "Tropical Rainforest",
+                type: "Natural Ecosystem",
+                location: "Mayon Volcano National Park / Mt. Makiling, PH",
+                illustrationKey: "rainforest",
+                hotspots: [
+                    { label: "B1", title: "Canopy Dipterocarp Trees", desc: "Biotic: High biodiversity, tall hardwood trees, orchids, and ferns.", top: "25%", left: "30%", type: "bio" },
+                    { label: "B2", title: "Philippine Fauna", desc: "Biotic: Philippine Eagle, tarsiers, fruit bats, and endemic insects.", top: "50%", left: "70%", type: "bio" },
+                    { label: "A1", title: "Tropical Sunlight & Rainfall", desc: "Abiotic: High year-round rainfall and intense warm solar radiation.", top: "15%", left: "80%", type: "abi" },
+                    { label: "A2", title: "Volcanic Forest Soil", desc: "Abiotic: Nutrient-dense topsoil formed by decomposing organic leaf litter.", top: "75%", left: "20%", type: "abi" }
+                ],
+                bioticOptions: ["Canopy Hardwood Trees", "Monkeys & Toucans", "Orchids & Ferns", "Forest Insects"],
+                abioticOptions: ["High Annual Rainfall", "Warm Tropical Sun", "Humid Moist Air", "Rich Leaf Litter Soil"],
+                supportOptions: ["Produces oxygen, regulates global climate, and provides habitats for 50% of land species."]
+            },
+            botanical: {
+                title: "Botanical Garden",
+                type: "Human-Made Ecosystem",
+                location: "Baguio Botanical Garden, Benguet, PH",
+                illustrationKey: "botanical",
+                hotspots: [
+                    { label: "B1", title: "Cultivated Flora & Shrubs", desc: "Biotic: Manicured pine flora, ornamental roses, hedges, and greenhouses.", top: "30%", left: "25%", type: "bio" },
+                    { label: "B2", title: "Managed Pollinators", desc: "Biotic: Butterflies, honeybees, and bird species attracted to gardens.", top: "45%", left: "75%", type: "bio" },
+                    { label: "A1", title: "Artificial Irrigation", desc: "Abiotic: Man-made sprinklers, piped water systems, and fertilizers.", top: "70%", left: "35%", type: "abi" },
+                    { label: "A2", title: "Greenhouse & Terraces", desc: "Abiotic: Glass framing, artificial shade mesh, and potting soil beds.", top: "20%", left: "80%", type: "abi" }
+                ],
+                bioticOptions: ["Cultivated Flower Beds", "Managed Honeybees", "Ornamental Shrubs", "Pond Fish"],
+                abioticOptions: ["Artificial Sprinklers", "Greenhouse Glass", "Commercial Fertilizers", "Prepared Potting Soil"],
+                supportOptions: ["Protects endangered plant species, supports conservation research, and provides urban green spaces."]
+            },
+            coral: {
+                title: "Coral Reef",
+                type: "Natural Ecosystem",
+                location: "Tubbataha Reefs Natural Park, Sulu Sea, PH",
+                illustrationKey: "coral",
+                hotspots: [
+                    { label: "B1", title: "Coral Polyps & Algae", desc: "Biotic: Symbiotic hard corals, sea anemones, and zooxanthellae.", top: "60%", left: "40%", type: "bio" },
+                    { label: "B2", title: "Reef Species", desc: "Biotic: Sea turtles, clownfish, parrotfish, and reef sharks.", top: "35%", left: "65%", type: "bio" },
+                    { label: "A1", title: "Shallow Warm Saltwater", desc: "Abiotic: Clear marine water allowing deep sunlight penetration.", top: "20%", left: "25%", type: "abi" },
+                    { label: "A2", title: "Calcium Substrate & Current", desc: "Abiotic: Rocky seafloor, wave action, and dissolved ocean oxygen.", top: "80%", left: "75%", type: "abi" }
+                ],
+                bioticOptions: ["Live Coral Polyps", "Clownfish & Sea Urchins", "Sea Anemones", "Marine Algae"],
+                abioticOptions: ["Shallow Clear Saltwater", "Tropical Sun Light", "Dissolved Oxygen", "Calcium Substrate"],
+                supportOptions: ["Provides marine nursery habitats, protects shorelines from storm waves, and sustains coastal fisheries."]
+            },
+            estuary: {
+                title: "Estuary",
+                type: "Natural Ecosystem",
+                location: "Pampanga River Delta Mouth, PH",
+                illustrationKey: "estuary",
+                hotspots: [
+                    { label: "B1", title: "Brackish Organisms", desc: "Biotic: Oysters, crabs, mud clams, and juvenile marine fish.", top: "55%", left: "30%", type: "bio" },
+                    { label: "B2", title: "Coastal Birds & Vegetation", desc: "Biotic: Herons, egrets, and salt-tolerant marsh grasses.", top: "30%", left: "70%", type: "bio" },
+                    { label: "A1", title: "Brackish Salinity Water", desc: "Abiotic: Mixed salinity water where river freshwater meets ocean tides.", top: "20%", left: "40%", type: "abi" },
+                    { label: "A2", title: "Nutrient River Mud", desc: "Abiotic: Dynamic rich silt deposits brought down by river currents.", top: "75%", left: "60%", type: "abi" }
+                ],
+                bioticOptions: ["Migratory Waterbirds", "Oysters & Blue Crabs", "Salt Marsh Cordgrass", "Juvenile Sea Bass"],
+                abioticOptions: ["Brackish Saline Water", "Tidal River Flow", "Nutrient Mud Sediment", "Fluctuating Water Levels"],
+                supportOptions: ["Acts as a natural water filter, buffers coastal flooding, and serves as a vital marine organism nursery."]
+            },
+            mangrove: {
+                title: "Mangrove Forest",
+                type: "Natural Ecosystem",
+                location: "Del Carmen Mangrove Reserve, Siargao, PH",
+                illustrationKey: "mangrove",
+                hotspots: [
+                    { label: "B1", title: "Stilt Root Mangroves", desc: "Biotic: Rhizophora mangrove trees with complex prop root networks.", top: "35%", left: "35%", type: "bio" },
+                    { label: "B2", title: "Intertidal Organisms", desc: "Biotic: Mudskippers, fiddler crabs, roosting waterbirds, and fry.", top: "65%", left: "65%", type: "bio" },
+                    { label: "A1", title: "Anaerobic Tidal Mud", desc: "Abiotic: Oxygen-poor muddy soil flooded regularly by tides.", top: "80%", left: "25%", type: "abi" },
+                    { label: "A2", title: "Saline Tidal Waters", desc: "Abiotic: Ocean tides, warm sea temperature, and coastal breezes.", top: "20%", left: "75%", type: "abi" }
+                ],
+                bioticOptions: ["Mangrove Stilt Trees", "Fiddler Crabs & Mudskippers", "Nesting Sea Birds", "Mosses & Lichens"],
+                abioticOptions: ["Anaerobic Tidal Mud", "Salty Brackish Tides", "High Humidity", "Tropical Sun Exposure"],
+                supportOptions: ["Prevents coastal shoreline erosion, traps carbon emissions, and shelters young fish larvae."]
+            }
+        };
+
+        /* Distractor options for Level 1 dropdowns */
+        const generalBiotic = ["Plastic Plants", "Concrete Sculptures", "Automobiles"];
+        const generalAbiotic = ["Fluorescent Glass", "Synthetic Chemical Spray", "Artificial Lighting"];
+        const generalSupport = [
+            "Purely serves as a parking lot for vehicles.",
+            "Eliminates all biological activity completely."
+        ];
+
+        /* Level 2 Question Bank */
+        const level2Questions = [
+            {
+                q: "1. Why do different ecosystems support different kinds of organisms?",
+                options: [
+                    "Organisms have specific adaptations that match the unique abiotic factors (such as temperature, salinity, and water availability) of each ecosystem.",
+                    "All organisms can live in any ecosystem, but they randomly choose where to go.",
+                    "Human beings place every wild organism in its specific ecosystem every year.",
+                    "Biotic components do not depend on abiotic conditions at all."
+                ],
+                correct: 0,
+                explanation: "Correct! Different organisms possess physical and behavioral adaptations tailored to specific temperature, water, and nutrient levels."
+            },
+            {
+                q: "2. How is a mangrove forest different from a coral reef in terms of environmental conditions?",
+                options: [
+                    "Coral reefs are found in muddy low-oxygen rivers, while mangroves grow deep in the open ocean.",
+                    "Mangroves thrive in muddy, intertidal shorelines with root exposure to air, whereas coral reefs require clear, shallow, warm saltwater.",
+                    "Mangroves are human-made glass structures, whereas coral reefs are terrestrial dry deserts.",
+                    "There are no environmental differences between mangroves and coral reefs."
+                ],
+                correct: 1,
+                explanation: "Correct! Mangroves feature stilt roots adapted to tidal mud, while corals need clear sunlight-penetrated saltwater."
+            },
+            {
+                q: "3. What might happen to organisms if the abiotic conditions of their ecosystem change significantly?",
+                options: [
+                    "All organisms instantly mutate and become human-made species.",
+                    "Nothing happens because living organisms do not need abiotic factors.",
+                    "Organisms may experience stress, migrate, or face population decline if they cannot adapt to changed temperature or salinity.",
+                    "Abiotic changes automatically increase the food supply for all animals."
+                ],
+                correct: 2,
+                explanation: "Correct! Significant changes in abiotic conditions (like temperature or pollution) disrupt life functions, causing species to move or decline."
+            }
+        ];
+
+        /* Initialization */
+        window.onload = function() {
+            initAudio();
+            selectEcosystem('rainforest');
+            renderL2Question();
+            updateProgress();
+        };
+
+        /* Level Switching */
+        function switchLevel(lvl) {
+            playTone(440, 'sine', 0.1);
+            currentLevel = lvl;
+
+            [1, 2, 3].forEach(i => {
+                const navBtn = document.getElementById(`nav-${i}`);
+                const page = document.getElementById(`level-${i}`);
+                if (i === lvl) {
+                    navBtn.className = "px-3 py-1 rounded-xl text-xs font-extrabold transition-all flex items-center space-x-1.5 bg-emerald-500 text-slate-950 shadow";
+                    page.classList.remove('hidden');
+                    page.classList.add('flex');
+                } else {
+                    navBtn.className = "px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 text-slate-300 hover:text-amber-300";
+                    page.classList.add('hidden');
+                    page.classList.remove('flex');
+                }
+            });
+        }
+
+        /* Level 1 Ecosystem Selection & Rendering */
+        function selectEcosystem(key) {
+            playTone(520, 'sine', 0.08);
+            activeEcoKey = key;
+            const data = ecosystemData[key];
+
+            // Update Tab Styling
+            document.querySelectorAll('.eco-tab').forEach(tab => {
+                tab.className = "eco-tab px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 bg-slate-800 text-slate-300 hover:text-white";
+            });
+            const activeTab = document.getElementById(`tab-${key}`);
+            activeTab.className = "eco-tab px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all flex items-center space-x-1.5 bg-emerald-500 text-slate-950 shadow";
+
+            // Update Stage SVG Illustration Artwork
+            const stageBg = document.getElementById('stage-bg');
+            stageBg.innerHTML = ecosystemIllustrations[data.illustrationKey];
+
+            // Stage Overlay Details
+            document.getElementById('current-eco-title').innerText = `${data.title} Matrix`;
+            document.getElementById('type-badge').innerText = data.type;
+            document.getElementById('location-tag').innerHTML = `<i class="fa-solid fa-location-dot mr-1"></i>${data.location}`;
+            
+            if (data.type.includes("Human")) {
+                document.getElementById('type-badge').className = "px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-400/30 w-fit";
+            } else {
+                document.getElementById('type-badge').className = "px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 w-fit";
+            }
+
+            // Render Hotspots
+            const hsContainer = document.getElementById('hotspots-container');
+            hsContainer.innerHTML = '';
+            data.hotspots.forEach((hs) => {
+                const node = document.createElement('button');
+                node.className = `hotspot-node absolute w-7 h-7 rounded-full font-black text-xs flex items-center justify-center border-2 cursor-pointer shadow-lg transition-transform hover:scale-125 z-20 ${
+                    hs.type === 'bio' 
+                    ? 'bg-emerald-500 border-emerald-200 text-slate-950' 
+                    : 'bg-cyan-500 border-cyan-200 text-slate-950'
+                }`;
+                node.style.top = hs.top;
+                node.style.left = hs.left;
+                node.innerHTML = hs.label;
+                node.onclick = () => showHotspotInfo(hs);
+                hsContainer.appendChild(node);
+            });
+
+            // Populate Dropdowns
+            populateDropdown('sel-bio1', [...data.bioticOptions, ...generalBiotic].sort());
+            populateDropdown('sel-bio2', [...data.bioticOptions, ...generalBiotic].sort());
+            populateDropdown('sel-abi1', [...data.abioticOptions, ...generalAbiotic].sort());
+            populateDropdown('sel-abi2', [...data.abioticOptions, ...generalAbiotic].sort());
+            populateDropdown('sel-support', [...data.supportOptions, ...generalSupport].sort());
+
+            document.getElementById('l1-feedback').innerHTML = `<i class="fa-solid fa-circle-question text-slate-500"></i><span>Select components and submit.</span>`;
+            document.getElementById('l1-feedback').className = "text-xs font-bold text-slate-300 flex items-center space-x-1.5";
+        }
+
+        function populateDropdown(id, items) {
+            const sel = document.getElementById(id);
+            sel.innerHTML = '<option value="">-- Select option --</option>';
+            items.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item;
+                opt.innerText = item;
+                sel.appendChild(opt);
+            });
+        }
+
+        function showHotspotInfo(hs) {
+            playTone(600, 'triangle', 0.1);
+            document.getElementById('hotspot-info-title').innerHTML = `<i class="fa-solid fa-location-dot text-amber-400"></i> <span>${hs.title}</span>`;
+            document.getElementById('hotspot-info-desc').innerText = hs.desc;
+        }
+
+        /* Level 1 Grading Logic */
+        function checkLevel1() {
+            const data = ecosystemData[activeEcoKey];
+            const b1 = document.getElementById('sel-bio1').value;
+            const b2 = document.getElementById('sel-bio2').value;
+            const a1 = document.getElementById('sel-abi1').value;
+            const a2 = document.getElementById('sel-abi2').value;
+            const sup = document.getElementById('sel-support').value;
+
+            if (!b1 || !b2 || !a1 || !a2 || !sup) {
+                playTone(250, 'sawtooth', 0.2);
+                document.getElementById('l1-feedback').innerHTML = `<i class="fa-solid fa-circle-exclamation text-amber-400"></i><span class="text-amber-300">Please answer all 5 dropdown selectors!</span>`;
+                return;
+            }
+
+            const isB1Valid = data.bioticOptions.includes(b1);
+            const isB2Valid = data.bioticOptions.includes(b2) && b1 !== b2;
+            const isA1Valid = data.abioticOptions.includes(a1);
+            const isA2Valid = data.abioticOptions.includes(a2) && a1 !== a2;
+            const isSupValid = data.supportOptions.includes(sup);
+
+            if (isB1Valid && isB2Valid && isA1Valid && isA2Valid && isSupValid) {
+                playSuccessSound();
+                document.getElementById('l1-feedback').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i><span class="text-emerald-400">Great job! Ecosystem correctly classified (+10 pts)</span>`;
+                
+                if (!level1Progress[activeEcoKey]) {
+                    level1Progress[activeEcoKey] = true;
+                    addScore(10);
+                    updateProgress();
+                }
+            } else {
+                playTone(200, 'sawtooth', 0.25);
+                document.getElementById('l1-feedback').innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i><span class="text-rose-300">Some answers are incorrect or duplicated. Review the ecosystem details!</span>`;
+            }
+        }
+
+        /* Level 2 Questions Logic */
+        function renderL2Question() {
+            const qData = level2Questions[level2Index];
+            document.getElementById('q-num').innerText = level2Index + 1;
+            document.getElementById('l2-question-text').innerText = qData.q;
+
+            const container = document.getElementById('l2-options-container');
+            container.innerHTML = '';
+
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-2.5 rounded-xl bg-slate-950/70 border border-white/10 text-xs text-slate-200 hover:border-amber-400 transition-all flex items-start space-x-2";
+                btn.innerHTML = `<span class="w-5 h-5 rounded-full bg-slate-800 text-amber-300 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">${String.fromCharCode(65 + idx)}</span><span class="flex-1">${opt}</span>`;
+                btn.onclick = () => answerL2(idx);
+                container.appendChild(btn);
+            });
+
+            document.getElementById('l2-feedback-text').innerText = "Select an option to evaluate your answer.";
+            document.getElementById('l2-feedback-text').className = "text-slate-400 font-medium";
+            document.getElementById('l2-next-btn').classList.add('hidden');
+        }
+
+        function answerL2(selectedIdx) {
+            const qData = level2Questions[level2Index];
+            const feedbackElem = document.getElementById('l2-feedback-text');
+
+            if (selectedIdx === qData.correct) {
+                playSuccessSound();
+                feedbackElem.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i><span class="text-emerald-300 font-bold">${qData.explanation}</span>`;
+                addScore(10);
+                updateProgress();
+            } else {
+                playTone(220, 'sawtooth', 0.2);
+                feedbackElem.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400 mr-1"></i><span class="text-rose-300 font-bold">Incorrect attempt. Hint: Re-read abiotic factors like water salinity and climate!</span>`;
+            }
+
+            document.getElementById('l2-next-btn').classList.remove('hidden');
+        }
+
+        function nextL2Question() {
+            playTone(500, 'sine', 0.08);
+            if (level2Index < level2Questions.length - 1) {
+                level2Index++;
+                renderL2Question();
+            } else {
+                switchLevel(3);
+            }
+        }
+
+        /* Level 3 Evaluation */
+        function checkLevel3() {
+            const s1 = document.getElementById('l3-s1').value;
+            const s2 = document.getElementById('l3-s2').value;
+            const s3 = document.getElementById('l3-s3').value;
+            const s4 = document.getElementById('l3-s4').value;
+
+            if (s1 === 'correct' && s2 === 'correct' && s3 === 'correct' && s4 === 'correct') {
+                playSuccessSound();
+                addScore(20);
+                updateProgress();
+                triggerConfetti();
+                showCertificate();
+            } else {
+                playTone(200, 'sawtooth', 0.25);
+                document.getElementById('l3-feedback').innerHTML = `<span class="text-rose-400 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Some statements are incorrect. Please review definitions!</span>`;
+            }
+        }
+
+        /* Scoring & Progress */
+        function addScore(pts) {
+            score += pts;
+            document.getElementById('score-val').innerText = score;
+        }
+
+        function updateProgress() {
+            const totalTasks = 5 + 3 + 1; // 5 ecosystems L1, 3 questions L2, 1 synthesis L3
+            const completedL1 = Object.values(level1Progress).filter(Boolean).length;
+            const completedL2 = level2Index;
+            const completedL3 = score >= 90 ? 1 : 0;
+
+            const percent = Math.min(100, Math.round(((completedL1 + completedL2 + completedL3) / totalTasks) * 100));
+            document.getElementById('progress-indicator').innerHTML = `<i class="fa-solid fa-chart-line text-emerald-400 mr-1"></i>Progress: ${percent}%`;
+        }
+
+        /* Certificate Modal & Confetti */
+        function showCertificate() {
+            document.getElementById('final-score').innerText = `${score} / 100 Points`;
+            document.getElementById('certificate-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('certificate-modal').classList.add('hidden');
+        }
+
+        function resetGame() {
+            score = 0;
+            level2Index = 0;
+            level1Progress = { rainforest: false, botanical: false, coral: false, estuary: false, mangrove: false };
+            document.getElementById('score-val').innerText = '0';
+            closeModal();
+            switchLevel(1);
+            renderL2Question();
+            updateProgress();
+        }
+
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        /* Pure Synthesized Audio Engine (Web Audio API) */
+        function initAudio() {
+            try {
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            } catch (e) {
+                console.log("Web Audio API not supported in browser.");
+            }
+        }
+
+        function toggleAudio() {
+            if (!audioCtx) initAudio();
+
+            audioMuted = !audioMuted;
+            const icon = document.getElementById('audio-icon');
+
+            if (!audioMuted) {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                icon.className = "fa-solid fa-volume-high text-amber-300";
+                startAmbientMusic();
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-400";
+                stopAmbientMusic();
+            }
+        }
+
+        function playTone(freq, type, duration) {
+            if (audioMuted || !audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playSuccessSound() {
+            if (audioMuted || !audioCtx) return;
+            playTone(523.25, 'sine', 0.15); // C5
+            setTimeout(() => playTone(659.25, 'sine', 0.15), 100); // E5
+            setTimeout(() => playTone(783.99, 'sine', 0.25), 200); // G5
+        }
+
+        function startAmbientMusic() {
+            if (!audioCtx || bgOscillator) return;
+            try {
+                bgOscillator = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                bgOscillator.type = 'sine';
+                bgOscillator.frequency.setValueAtTime(110, audioCtx.currentTime); // Low relaxing pitch
+                gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                bgOscillator.connect(gain);
+                gain.connect(audioCtx.destination);
+                bgOscillator.start();
+            } catch (e) {}
+        }
+
+        function stopAmbientMusic() {
+            if (bgOscillator) {
+                try {
+                    bgOscillator.stop();
+                    bgOscillator.disconnect();
+                } catch (e) {}
+                bgOscillator = null;
+            }
+        }
+    </script>
+</body>
+</html>
